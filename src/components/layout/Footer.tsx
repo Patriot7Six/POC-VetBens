@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ShieldCheck } from 'lucide-react'
 
@@ -30,6 +31,8 @@ const LINKS = {
 }
 
 export function Footer() {
+  const [year, setYear] = useState(2025)
+  useEffect(() => { setYear(new Date().getFullYear()) }, [])
   return (
     <footer className="bg-navy-950 border-t border-navy-800">
       <div className="container-wide py-14">
@@ -82,7 +85,7 @@ export function Footer() {
         <div className="mt-12 pt-6 border-t border-navy-800/60 flex flex-col sm:flex-row
                         items-center justify-between gap-4">
           <p className="text-[12px] text-navy-600">
-            © {new Date().getFullYear()} Patriot Ops Center. All rights reserved.
+            © {year} Patriot Ops Center. All rights reserved.
           </p>
           <div className="flex items-center gap-1.5 text-[12px] text-navy-600">
             <span>🇺🇸</span>
