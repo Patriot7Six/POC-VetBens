@@ -3,14 +3,11 @@
   "image": "mcr.microsoft.com/devcontainers/typescript-node:22-bookworm",
 
   "features": {
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "22"
-    },
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
 
-  "onCreateCommand": "npm install -g supabase@latest @trigger.dev/cli@latest",
+  "onCreateCommand": "curl -fsSL https://supabase.com/install.sh | sh && npm install -g trigger.dev@latest",
 
   "postCreateCommand": "npm install && echo '✓ Dependencies installed'",
 
@@ -18,11 +15,11 @@
 
   "forwardPorts": [3000, 54321, 54322, 54323, 6006],
   "portsAttributes": {
-    "3000":  { "label": "Next.js App",        "onAutoForward": "openPreview" },
-    "54321": { "label": "Supabase Studio",    "onAutoForward": "silent"      },
-    "54322": { "label": "Supabase DB",        "onAutoForward": "silent"      },
-    "54323": { "label": "Supabase Auth",      "onAutoForward": "silent"      },
-    "6006":  { "label": "Storybook",          "onAutoForward": "silent"      }
+    "3000":  { "label": "Next.js App",     "onAutoForward": "openPreview" },
+    "54321": { "label": "Supabase Studio", "onAutoForward": "silent"      },
+    "54322": { "label": "Supabase DB",     "onAutoForward": "silent"      },
+    "54323": { "label": "Supabase Auth",   "onAutoForward": "silent"      },
+    "6006":  { "label": "Storybook",       "onAutoForward": "silent"      }
   },
 
   "customizations": {
@@ -31,7 +28,6 @@
         "bradlc.vscode-tailwindcss",
         "esbenp.prettier-vscode",
         "dbaeumer.vscode-eslint",
-        "Prisma.prisma",
         "ms-azuretools.vscode-docker",
         "github.copilot",
         "github.copilot-chat",
@@ -40,7 +36,6 @@
         "ms-vscode.vscode-typescript-next",
         "christian-kohler.path-intellisense",
         "formulahendry.auto-rename-tag",
-        "steoates.autoimport",
         "usernamehw.errorlens",
         "streetsidesoftware.code-spell-checker",
         "Supabase.supabase",
@@ -72,9 +67,5 @@
 
   "remoteEnv": {
     "NODE_ENV": "development"
-  },
-
-  "mounts": [
-    "source=${localWorkspaceFolder}/.env.local,target=/workspaces/patriot-ops-center/.env.local,type=bind,consistency=cached"
-  ]
+  }
 }
