@@ -1,50 +1,47 @@
-import type { NextConfig } from 'next'
-import { withSentryConfig } from '@sentry/nextjs'
+import type { NextConfig } from "next";
+
+// Note: withSentryConfig removed — Sentry does not yet support Turbopack,
+// which is the default bundler in Next.js 16. Wrapping with withSentryConfig
+// injects a webpack config that conflicts with Turbopack and fails the build.
+// Re-add once https://github.com/getsentry/sentry-javascript/issues/8105 is resolved.
 
 const nextConfig: NextConfig = {
-  // Next.js 16: cacheComponents is top-level, not under experimental
+  // Next.js 16: cacheComponents enables Partial Pre-Rendering
   cacheComponents: true,
+
+  // Required: tells Next.js the Turbopack usage is intentional.
+  // Without this, any webpack config (e.g. from plugins) causes a hard build error.
+  turbopack: {},
 
   images: {
     remotePatterns: [
-      { protocol: 'https', hostname: '*.supabase.co' },
-      { protocol: 'https', hostname: 'patriot7six.com' },
+      { protocol: "https", hostname: "*.supabase.co" },
+      { protocol: "https", hostname: "patriot7six.com" },
     ],
   },
 
-  serverExternalPackages: ['@trigger.dev/sdk'],
+  serverExternalPackages: ["@trigger.dev/sdk"],
 
   async redirects() {
-    return [
-      { source: '/home', destination: '/', permanent: true },
-    ]
+    return [{ source: "/home", destination: "/", permanent: true }];
   },
 
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: "/(.*)",
         headers: [
-          { key: 'X-Frame-Options',           value: 'DENY' },
-          { key: 'X-Content-Type-Options',     value: 'nosniff' },
-          { key: 'Referrer-Policy',            value: 'strict-origin-when-cross-origin' },
-          { key: 'Permissions-Policy',         value: 'camera=(), microphone=(), geolocation=()' },
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
         ],
       },
-    ]
+    ];
   },
-}
+};
 
-const isTurbopackDev = process.env.npm_lifecycle_script?.includes('--turbopack')
-
-export default isTurbopackDev
-  ? nextConfig
-  : withSentryConfig(nextConfig, {
-      org:                      process.env.SENTRY_ORG,
-      project:                  process.env.SENTRY_PROJECT,
-      silent:                   !process.env.CI,
-      widenClientFileUpload:    true,
-      hideSourceMaps:           true,
-      disableLogger:            true,
-      automaticVercelMonitors:  true,
-    })
+export default nextConfig;
