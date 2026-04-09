@@ -50,7 +50,7 @@ export function Badge({
 }
 
 // ── Input ─────────────────────────────────────────────────────────────────────
-interface InputProps extends Omit<
+interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'prefix'> {
   React.InputHTMLAttributes<HTMLInputElement>,
   "prefix"
 > {
