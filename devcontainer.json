@@ -1,0 +1,71 @@
+{
+  "name": "Patriot Ops Center",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:22-bookworm",
+
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+  },
+
+  "onCreateCommand": "curl -fsSL https://supabase.com/install.sh | sh && npm install -g trigger.dev@latest",
+
+  "postCreateCommand": "npm install --legacy-peer-deps && echo '✓ Dependencies installed'",
+
+  "postStartCommand": "echo '🎯 Patriot Ops Center — Codespace ready. Run: npm run dev'",
+
+  "forwardPorts": [3000, 54321, 54322, 54323, 6006],
+  "portsAttributes": {
+    "3000":  { "label": "Next.js App",     "onAutoForward": "openPreview" },
+    "54321": { "label": "Supabase Studio", "onAutoForward": "silent"      },
+    "54322": { "label": "Supabase DB",     "onAutoForward": "silent"      },
+    "54323": { "label": "Supabase Auth",   "onAutoForward": "silent"      },
+    "6006":  { "label": "Storybook",       "onAutoForward": "silent"      }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "ms-azuretools.vscode-docker",
+        "github.copilot",
+        "github.copilot-chat",
+        "GitHub.vscode-pull-request-github",
+        "eamodio.gitlens",
+        "ms-vscode.vscode-typescript-next",
+        "christian-kohler.path-intellisense",
+        "formulahendry.auto-rename-tag",
+        "usernamehw.errorlens",
+        "streetsidesoftware.code-spell-checker",
+        "Supabase.supabase",
+        "biomejs.biome"
+      ],
+      "settings": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        "editor.tabSize": 2,
+        "editor.rulers": [100],
+        "typescript.preferences.importModuleSpecifier": "non-relative",
+        "typescript.tsdk": "node_modules/typescript/lib",
+        "tailwindCSS.experimental.classRegex": [
+          ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"],
+          ["cn\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+        ],
+        "files.exclude": {
+          "**/.git": true,
+          "**/node_modules": true,
+          "**/.next": true
+        },
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+
+  "remoteEnv": {
+    "NODE_ENV": "development"
+  }
+}
