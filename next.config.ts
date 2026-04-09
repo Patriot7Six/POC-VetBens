@@ -2,14 +2,8 @@ import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    // Next.js 16: experimental.ppr was renamed to cacheComponents
-    // This enables Partial Pre-Rendering for instant navigation
-    cacheComponents: true,
-
-    // agentDevTools removed — not yet available in this Next.js build
-    // Re-add when confirmed stable: https://nextjs.org/docs/app/api-reference/config/next-config-js
-  },
+  // Next.js 16: cacheComponents is top-level, not under experimental
+  cacheComponents: true,
 
   images: {
     remotePatterns: [
@@ -21,13 +15,7 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["@trigger.dev/sdk"],
 
   async redirects() {
-    return [
-      {
-        source: "/home",
-        destination: "/",
-        permanent: true,
-      },
-    ];
+    return [{ source: "/home", destination: "/", permanent: true }];
   },
 
   async headers() {
@@ -48,8 +36,6 @@ const nextConfig: NextConfig = {
   },
 };
 
-// Sentry is disabled during local dev with Turbopack — it doesn't support it yet.
-// It will fully activate in production builds (npm run build).
 const isTurbopackDev =
   process.env.npm_lifecycle_script?.includes("--turbopack");
 
