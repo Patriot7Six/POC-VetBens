@@ -14,14 +14,14 @@ type BadgeVariant =
   | "outline";
 
 const badgeVariants: Record<BadgeVariant, string> = {
-  navy: "bg-navy-800 text-navy-200 border border-navy-700",
-  gold: "bg-gold-500/15 text-gold-400 border border-gold-500/30",
-  free: "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30",
-  pro: "bg-gold-500/20 text-gold-300 border border-gold-600/40",
-  elite: "bg-purple-500/15 text-purple-300 border border-purple-500/30",
+  navy:    "bg-navy-800 text-navy-200 border border-navy-700",
+  gold:    "bg-gold-500/15 text-gold-400 border border-gold-500/30",
+  free:    "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30",
+  pro:     "bg-gold-500/20 text-gold-300 border border-gold-600/40",
+  elite:   "bg-purple-500/15 text-purple-300 border border-purple-500/30",
   success: "bg-emerald-500/15 text-emerald-400",
   warning: "bg-gold-500/15 text-gold-400",
-  danger: "bg-red-500/15 text-red-400",
+  danger:  "bg-red-500/15 text-red-400",
   outline: "border border-navy-600 text-navy-300",
 };
 
@@ -50,13 +50,10 @@ export function Badge({
 }
 
 // ── Input ─────────────────────────────────────────────────────────────────────
-interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'prefix'> {
-  React.InputHTMLAttributes<HTMLInputElement>,
-  "prefix"
-> {
-  label?: string;
-  error?: string;
-  hint?: string;
+interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "prefix"> {
+  label?:  string;
+  error?:  string;
+  hint?:   string;
   prefix?: React.ReactNode;
 }
 
@@ -112,7 +109,7 @@ Input.displayName = "Input";
 interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
   error?: string;
-  hint?: string;
+  hint?:  string;
 }
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -157,9 +154,9 @@ Textarea.displayName = "Textarea";
 
 // ── Select ────────────────────────────────────────────────────────────────────
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  label?: string;
-  error?: string;
-  options: { value: string; label: string }[];
+  label?:   string;
+  error?:   string;
+  options:  { value: string; label: string }[];
 }
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
