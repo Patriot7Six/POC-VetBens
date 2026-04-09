@@ -64,5 +64,4 @@ Please provide a comprehensive benefits eligibility assessment.
 }
 
 // Rate limiting — 10 requests per IP per hour (enforced at edge via Vercel)
-export const runtime  = 'nodejs'
 export const maxDuration = 60

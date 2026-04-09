@@ -65,5 +65,4 @@ Please provide specific, actionable guidance for this situation.
   }
 }
 
-export const runtime     = 'nodejs'
 export const maxDuration = 60
