@@ -23,7 +23,7 @@ const STATS = [
 ]
 
 const FREE_FEATURES = [
-  'VA Eligibility Checker — every benefit you've earned',
+  "VA Eligibility Checker — every benefit you've earned",
   'Claims Copilot — AI-guided filing and tracking',
   '1-Year Transition Timeline — interactive checklist',
   'DD214 Upload & Parsing — instant record analysis',
@@ -53,7 +53,7 @@ const STEPS = [
     number: '02',
     icon:   ShieldCheck,
     title:  'Navigate your benefits',
-    body:   'Discover every VA benefit you've earned, get guided help filing claims, and follow your personalized 1-year transition checklist.',
+    body:   "Discover every VA benefit you've earned, get guided help filing claims, and follow your personalized 1-year transition checklist.",
   },
   {
     number: '03',
