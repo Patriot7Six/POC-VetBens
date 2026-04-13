@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { getPlanByTier } from '@/lib/stripe'
+import { BRANCH_LABELS } from '@/lib/utils'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -133,8 +134,8 @@ export default async function DashboardPage() {
               Your Service Profile
             </h3>
             <div className="bg-white/[0.03] border border-white/[0.07] rounded-2xl p-6 grid grid-cols-2 sm:grid-cols-4 gap-6">
-              <ProfileStat label="Branch" value={profile.branch ?? '—'} />
-              <ProfileStat label="MOS / Rate" value={profile.mos ?? '—'} />
+              <ProfileStat label="Branch" value={profile.branch ? (BRANCH_LABELS[profile.branch] ?? profile.branch) : '—'} />
+              <ProfileStat label="MOS / Rate" value={profile.mos_code ?? '—'} />
               <ProfileStat label="Rank" value={profile.rank ?? '—'} />
               <ProfileStat
                 label="Separation"

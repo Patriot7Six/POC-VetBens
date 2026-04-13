@@ -4,17 +4,18 @@ import { useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { MilitaryBranch } from '@/types/database'
+import { BRANCH_LABELS } from '@/lib/utils'
 
 // ── Step definitions ─────────────────────────────────────────────────────────
 const BRANCHES: MilitaryBranch[] = [
-  'Army', 'Navy', 'Air Force', 'Marine Corps',
-  'Coast Guard', 'Space Force', 'National Guard', 'Reserves',
+  'army', 'navy', 'air_force', 'marine_corps',
+  'coast_guard', 'space_force', 'national_guard', 'reserves',
 ]
 
 interface FormData {
   branch: MilitaryBranch | ''
   rank: string
-  mos: string
+  mos_code: string
   ets_date: string
 }
 
@@ -24,7 +25,7 @@ const TOTAL_STEPS = 3
 export default function OnboardingPage() {
   const router = useRouter()
   const [step, setStep] = useState(1)
-  const [form, setForm] = useState<FormData>({ branch: '', rank: '', mos: '', ets_date: '' })
+  const [form, setForm] = useState<FormData>({ branch: '', rank: '', mos_code: '', ets_date: '' })
   const [isPending, startTransition] = useTransition()
 
   const supabase = createClient()
@@ -34,7 +35,7 @@ export default function OnboardingPage() {
 
   const canProceed = () => {
     if (step === 1) return form.branch !== ''
-    if (step === 2) return form.mos.trim() !== ''
+    if (step === 2) return form.mos_code.trim() !== ''
     if (step === 3) return form.ets_date !== ''
     return true
   }
@@ -49,10 +50,9 @@ export default function OnboardingPage() {
         .update({
           branch: form.branch || null,
           rank: form.rank || null,
-          mos: form.mos || null,
+          mos_code: form.mos_code || null,
           ets_date: form.ets_date || null,
           onboarding_complete: true,
-          onboarding_step: TOTAL_STEPS,
         })
         .eq('id', user.id)
 
@@ -104,9 +104,9 @@ export default function OnboardingPage() {
             <StepMOS
               branch={form.branch as MilitaryBranch}
               rank={form.rank}
-              mos={form.mos}
+              mos={form.mos_code}
               onRank={v => update('rank', v)}
-              onMOS={v => update('mos', v)}
+              onMOS={v => update('mos_code', v)}
             />
           )}
           {step === 3 && <StepETS value={form.ets_date} onChange={v => update('ets_date', v)} />}
@@ -172,7 +172,7 @@ function StepBranch({
                 : 'bg-white/[0.03] border-white/10 text-slate-300 hover:border-white/20 hover:bg-white/[0.06]'
             }`}
           >
-            {b}
+            {BRANCH_LABELS[b] ?? b}
           </button>
         ))}
       </div>
@@ -189,8 +189,8 @@ function StepMOS({
   onRank: (v: string) => void
   onMOS: (v: string) => void
 }) {
-  const mosLabel = branch === 'Navy' || branch === 'Coast Guard' ? 'Rate'
-    : branch === 'Air Force' || branch === 'Space Force' ? 'AFSC'
+  const mosLabel = branch === 'navy' || branch === 'coast_guard' ? 'Rate'
+    : branch === 'air_force' || branch === 'space_force' ? 'AFSC'
     : 'MOS'
 
   return (
@@ -222,7 +222,7 @@ function StepMOS({
             type="text"
             value={mos}
             onChange={e => onMOS(e.target.value)}
-            placeholder={branch === 'Army' ? 'e.g. 11B — Infantry' : `Your ${mosLabel}`}
+            placeholder={branch === 'army' ? 'e.g. 11B — Infantry' : `Your ${mosLabel}`}
             className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white
                        placeholder:text-slate-600 focus:outline-none focus:border-gold-500/60
                        focus:ring-1 focus:ring-gold-500/30 transition-all text-sm"
