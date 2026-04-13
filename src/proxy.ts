@@ -1,79 +1,32 @@
-import { type NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@supabase/ssr";
+// proxy.ts  (project root — replaces middleware.ts in Next.js 16)
+//
+// Next.js 16 renamed middleware.ts → proxy.ts and the exported function
+// from `middleware` → `proxy`.  Drop this file at the project root
+// alongside app/, public/, etc.  Delete the old middleware.ts.
+//
+// The proxy runs on every matched request before the page renders.
+// Its job: refresh the Supabase session token and redirect unauthenticated
+// users.  Heavy business logic lives in lib/supabase/proxy.ts.
 
-// Next.js 16: proxy.ts replaces middleware.ts
-// Runs on Node.js runtime, makes network boundary explicit
-
-type CookieToSet = { name: string; value: string; options?: object };
-
-const AUTH_PATHS = ["/login", "/signup"];
-
-function matchesPath(pathname: string, patterns: string[]): boolean {
-  return patterns.some((pattern) => {
-    const regex = new RegExp(`^${pattern}$`);
-    return regex.test(pathname);
-  });
-}
+import { type NextRequest } from 'next/server'
+import { updateSession } from '@/lib/supabase/proxy'
 
 export async function proxy(request: NextRequest) {
-  let response = NextResponse.next({ request });
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet: CookieToSet[]) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value),
-          );
-          response = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(
-              name,
-              value,
-              options as Parameters<typeof response.cookies.set>[2],
-            ),
-          );
-        },
-      },
-    },
-  );
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const { pathname } = request.nextUrl;
-
-  if (user && matchesPath(pathname, AUTH_PATHS)) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-
-  if (!user && pathname.startsWith("/dashboard")) {
-    const redirectUrl = new URL("/login", request.url);
-    redirectUrl.searchParams.set("redirectTo", pathname);
-    return NextResponse.redirect(redirectUrl);
-  }
-
-  if (!user && pathname.startsWith("/career")) {
-    const redirectUrl = new URL("/login", request.url);
-    redirectUrl.searchParams.set("redirectTo", pathname);
-    return NextResponse.redirect(redirectUrl);
-  }
-
-  if (pathname.startsWith("/org") && !user) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-
-  return response;
+  return await updateSession(request)
 }
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|images|icons|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    /*
+     * Match all paths EXCEPT:
+     *   - _next/static  (static assets)
+     *   - _next/image   (image optimization)
+     *   - favicon.ico
+     *   - any file with an image/font extension
+     *
+     * The Stripe webhook route bypasses auth inside updateSession,
+     * so it's safe to include here.
+     */
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|woff2?)$).*)',
   ],
-};
+}
