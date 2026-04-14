@@ -231,7 +231,7 @@ export default function HomePage() {
         </section>
 
         {/* ── FREE TOOLS BANNER ────────────────────────────── */}
-        <div className="bg-gradient-to-r from-navy-900 via-navy-800 to-navy-900
+        <div className="bg-linear-to-r from-navy-900 via-navy-800 to-navy-900
                         border-y border-navy-700 py-3.5">
           <div className="container-wide flex flex-wrap items-center justify-center gap-3 text-sm">
             <Badge variant="free">Always Free</Badge>
@@ -386,7 +386,7 @@ export default function HomePage() {
                   key={plan.name}
                   className={`rounded-2xl border p-8 flex flex-col transition-all duration-200 ${
                     plan.featured
-                      ? 'border-gold-600/50 bg-gradient-to-b from-navy-800 to-navy-900 scale-[1.03] shadow-gold-md'
+                      ? 'border-gold-600/50 bg-linear-to-b from-navy-800 to-navy-900 scale-[1.03] shadow-gold-md'
                       : 'border-navy-700 bg-navy-900 hover:border-navy-600'
                   }`}
                 >
@@ -456,7 +456,7 @@ export default function HomePage() {
                 <h2 className="text-4xl font-black tracking-tight text-navy-50 mb-4">
                   Bring the mission<br />to your members
                 </h2>
-                <div className="w-10 h-0.5 bg-gradient-to-r from-gold-500 to-gold-700 mb-6" />
+                <div className="w-10 h-0.5 bg-linear-to-r from-gold-500 to-gold-700 mb-6" />
                 <p className="text-navy-300 leading-relaxed mb-8">
                   VSOs, law firms, TAP programs, and employers get their own fully white-labeled
                   tenant — with a dedicated admin dashboard, member management, and reporting tools.

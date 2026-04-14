@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { ShieldCheck, Menu, X, ChevronDown } from 'lucide-react'
+import { ShieldCheck, Menu, X } from 'lucide-react'
 
 const NAV_LINKS = [
   {

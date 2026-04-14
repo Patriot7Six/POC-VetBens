@@ -20,17 +20,17 @@ export type AITask =
 // specific tasks to other models if/when needed without touching
 // product code — just update the config here.
 const MODEL_ROUTING: Record<AITask, { provider: 'anthropic'; model: string; maxTokens: number }> = {
-  benefits_eligibility: { provider: 'anthropic', model: 'claude-opus-4-5',   maxTokens: 2048 },
-  claims_guidance:      { provider: 'anthropic', model: 'claude-opus-4-5',   maxTokens: 2048 },
-  mos_translation:      { provider: 'anthropic', model: 'claude-sonnet-4-5', maxTokens: 1024 },
-  resume_generation:    { provider: 'anthropic', model: 'claude-opus-4-5',   maxTokens: 4096 },
-  resume_tailoring:     { provider: 'anthropic', model: 'claude-sonnet-4-5', maxTokens: 2048 },
-  interview_questions:  { provider: 'anthropic', model: 'claude-sonnet-4-5', maxTokens: 2048 },
-  interview_feedback:   { provider: 'anthropic', model: 'claude-sonnet-4-5', maxTokens: 1024 },
-  salary_insights:      { provider: 'anthropic', model: 'claude-sonnet-4-5', maxTokens: 1024 },
-  cover_letter:         { provider: 'anthropic', model: 'claude-sonnet-4-5', maxTokens: 1500 },
-  linkedin_optimizer:   { provider: 'anthropic', model: 'claude-sonnet-4-5', maxTokens: 2048 },
-  career_coach:         { provider: 'anthropic', model: 'claude-opus-4-5',   maxTokens: 2048 },
+  benefits_eligibility: { provider: 'anthropic', model: 'claude-opus-4-6',            maxTokens: 2048 },
+  claims_guidance:      { provider: 'anthropic', model: 'claude-opus-4-6',            maxTokens: 2048 },
+  mos_translation:      { provider: 'anthropic', model: 'claude-sonnet-4-6',          maxTokens: 1024 },
+  resume_generation:    { provider: 'anthropic', model: 'claude-opus-4-6',            maxTokens: 4096 },
+  resume_tailoring:     { provider: 'anthropic', model: 'claude-sonnet-4-6',          maxTokens: 2048 },
+  interview_questions:  { provider: 'anthropic', model: 'claude-sonnet-4-6',          maxTokens: 2048 },
+  interview_feedback:   { provider: 'anthropic', model: 'claude-sonnet-4-6',          maxTokens: 1024 },
+  salary_insights:      { provider: 'anthropic', model: 'claude-sonnet-4-6',          maxTokens: 1024 },
+  cover_letter:         { provider: 'anthropic', model: 'claude-sonnet-4-6',          maxTokens: 1500 },
+  linkedin_optimizer:   { provider: 'anthropic', model: 'claude-sonnet-4-6',          maxTokens: 2048 },
+  career_coach:         { provider: 'anthropic', model: 'claude-opus-4-6',            maxTokens: 2048 },
   jargon_translator:    { provider: 'anthropic', model: 'claude-haiku-4-5-20251001',  maxTokens: 512  },
 }
 

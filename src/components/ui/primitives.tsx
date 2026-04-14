@@ -218,7 +218,7 @@ export function GoldDivider({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "w-10 h-0.5 bg-gradient-to-r from-gold-500 to-gold-700",
+        "w-10 h-0.5 bg-linear-to-r from-gold-500 to-gold-700",
         className,
       )}
     />

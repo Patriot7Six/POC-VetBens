@@ -7,8 +7,9 @@ import { BRANCH_LABELS } from '@/lib/utils'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
+  // Auth is already enforced by middleware + dashboard layout — just fetch data
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/login')
+  if (!user) redirect('/login') // belt-and-suspenders for direct Server Component calls
 
   const [{ data: profile }, { data: subscription }] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
@@ -28,7 +29,7 @@ export default async function DashboardPage() {
   return (
     <div className="flex-1 overflow-y-auto">
       {/* Top bar */}
-      <header className="h-16 border-b border-white/[0.06] px-8 flex items-center justify-between">
+      <header className="h-16 border-b border-white/6 px-8 flex items-center justify-between">
         <h1 className="text-white font-semibold">Dashboard</h1>
         <div className="flex items-center gap-3">
           <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${
@@ -59,7 +60,7 @@ export default async function DashboardPage() {
         {/* Incomplete profile banner */}
         {isNewUser && (
           <div className="relative rounded-2xl border border-gold-500/30 bg-gold-500/5 overflow-hidden p-6 flex items-center gap-5">
-            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-gold-500/60 to-transparent" />
+            <div className="absolute top-0 inset-x-0 h-px bg-linear-to-r from-transparent via-gold-500/60 to-transparent" />
             <div className="w-12 h-12 rounded-xl bg-gold-500/10 border border-gold-500/20 flex items-center justify-center shrink-0">
               <svg className="w-6 h-6 text-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75}
@@ -133,7 +134,7 @@ export default async function DashboardPage() {
             <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4">
               Your Service Profile
             </h3>
-            <div className="bg-white/[0.03] border border-white/[0.07] rounded-2xl p-6 grid grid-cols-2 sm:grid-cols-4 gap-6">
+            <div className="bg-white/3 border border-white/7 rounded-2xl p-6 grid grid-cols-2 sm:grid-cols-4 gap-6">
               <ProfileStat label="Branch" value={profile.branch ? (BRANCH_LABELS[profile.branch] ?? profile.branch) : '—'} />
               <ProfileStat label="MOS / Rate" value={profile.mos_code ?? '—'} />
               <ProfileStat label="Rank" value={profile.rank ?? '—'} />
@@ -149,7 +150,7 @@ export default async function DashboardPage() {
 
         {/* Upgrade nudge for free users */}
         {tier === 'free' && (
-          <section className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6 flex items-center gap-6">
+          <section className="rounded-2xl border border-white/7 bg-white/2 p-6 flex items-center gap-6">
             <div className="flex-1">
               <p className="text-white font-semibold mb-1">
                 Unlock unlimited access with Ranger
@@ -184,8 +185,8 @@ function ActionCard({
   return (
     <Link
       href={href}
-      className="group block bg-white/[0.03] hover:bg-white/[0.05] border border-white/[0.07]
-                 hover:border-white/[0.12] rounded-2xl p-5 transition-all"
+      className="group block bg-white/3 hover:bg-white/5 border border-white/7
+                 hover:border-white/12 rounded-2xl p-5 transition-all"
     >
       <div className="w-11 h-11 rounded-xl bg-gold-500/10 border border-gold-500/20 flex items-center
                       justify-center text-gold-400 mb-4 group-hover:bg-gold-500/15 transition-colors">

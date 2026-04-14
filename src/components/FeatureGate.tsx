@@ -36,7 +36,7 @@ function UpgradePrompt({ requiredTier }: { requiredTier: SubscriptionTier }) {
   return (
     <div className="relative rounded-xl border border-gold-500/20 bg-gold-500/5 overflow-hidden">
       {/* Shimmer bar */}
-      <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-gold-500 to-transparent" />
+      <div className="absolute top-0 inset-x-0 h-0.5 bg-linear-to-r from-transparent via-gold-500 to-transparent" />
 
       <div className="px-6 py-5 flex items-start gap-4">
         <div className="w-10 h-10 rounded-lg bg-gold-500/10 border border-gold-500/20 flex items-center justify-center shrink-0">

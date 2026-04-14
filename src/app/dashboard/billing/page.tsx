@@ -164,7 +164,7 @@ function PlanCard({
 
       {/* Current indicator */}
       {isCurrent && (
-        <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-gold-500 to-transparent" />
+        <div className="absolute top-0 inset-x-0 h-0.5 bg-linear-to-r from-transparent via-gold-500 to-transparent" />
       )}
 
       <div className="p-6 flex-1">

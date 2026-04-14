@@ -87,9 +87,9 @@ export default function DashboardSidebar({ profile, subscription }: Props) {
     : '?'
 
   return (
-    <aside className="w-64 shrink-0 border-r border-white/[0.06] bg-[#050e1a] flex flex-col sticky top-0 h-screen">
+    <aside className="w-64 shrink-0 border-r border-white/6 bg-[#050e1a] flex flex-col sticky top-0 h-screen">
       {/* Logo */}
-      <div className="h-16 flex items-center px-5 border-b border-white/[0.06]">
+      <div className="h-16 flex items-center px-5 border-b border-white/6">
         <Link href="/dashboard" className="flex items-center gap-2.5">
           <div className="w-7 h-7 rounded bg-gold-500 flex items-center justify-center">
             <svg viewBox="0 0 24 24" className="w-4 h-4 fill-navy-950">
@@ -114,7 +114,7 @@ export default function DashboardSidebar({ profile, subscription }: Props) {
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                 active
                   ? 'bg-gold-500/10 text-gold-400 border border-gold-500/20'
-                  : 'text-slate-400 hover:text-white hover:bg-white/[0.04]'
+                  : 'text-slate-400 hover:text-white hover:bg-white/4'
               }`}
             >
               <span className={active ? 'text-gold-400' : 'text-slate-500'}>{item.icon}</span>
@@ -142,7 +142,7 @@ export default function DashboardSidebar({ profile, subscription }: Props) {
       )}
 
       {/* User */}
-      <div className="border-t border-white/[0.06] p-4">
+      <div className="border-t border-white/6 p-4">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-full bg-gold-500/20 border border-gold-500/30 flex items-center justify-center shrink-0">
             <span className="text-gold-400 text-xs font-bold">{initials}</span>
