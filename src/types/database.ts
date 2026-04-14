@@ -6,23 +6,50 @@ export type SubscriptionStatus =
   | 'past_due' | 'paused' | 'trialing' | 'unpaid'
 
 export type MilitaryBranch =
-  | 'Army' | 'Navy' | 'Air Force' | 'Marine Corps'
-  | 'Coast Guard' | 'Space Force' | 'National Guard' | 'Reserves'
+  | 'army' | 'navy' | 'air_force' | 'marine_corps'
+  | 'coast_guard' | 'space_force' | 'national_guard' | 'reserves'
 
 export interface Profile {
   id: string
-  email: string | null
-  full_name: string | null
-  avatar_url: string | null
-  branch: MilitaryBranch | null
-  mos: string | null
-  rank: string | null
-  ets_date: string | null        // ISO date string
-  onboarding_complete: boolean
-  onboarding_step: number
-  stripe_customer_id: string | null
   created_at: string
   updated_at: string
+
+  // Personal info
+  full_name: string | null
+  email: string | null
+  avatar_url: string | null
+  phone: string | null
+
+  // Military service
+  branch: MilitaryBranch | null
+  mos_code: string | null
+  mos_title: string | null
+  rank: string | null
+  years_of_service: number | null
+  separation_date: string | null
+  ets_date: string | null
+  deployment_count: number
+  combat_vet: boolean
+  security_clearance: string | null
+
+  // Transition state
+  transition_started_at: string | null
+  is_transitioning: boolean
+
+  // Subscription
+  tier: SubscriptionTier
+  stripe_customer_id: string | null
+  subscription_id: string | null
+
+  // Preferences
+  location_city: string | null
+  location_state: string | null
+  target_industry: string[] | null
+  target_roles: string[] | null
+
+  // Meta
+  onboarding_complete: boolean
+  terms_accepted_at: string | null
 }
 
 export interface Subscription {

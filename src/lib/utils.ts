@@ -49,39 +49,6 @@ export function daysUntil(date: string | Date): number {
   return Math.ceil(diff / (1000 * 60 * 60 * 24))
 }
 
-// Subscription tier helpers
-export type Tier = 'free' | 'pro' | 'elite'
-
-export const TIER_LIMITS = {
-  free: {
-    resumes:           1,
-    interviewSessions: 3,
-    jobListings:       20,
-    questionsPerSession: 10,
-  },
-  pro: {
-    resumes:           Infinity,
-    interviewSessions: Infinity,
-    jobListings:       Infinity,
-    questionsPerSession: 20,
-  },
-  elite: {
-    resumes:           Infinity,
-    interviewSessions: Infinity,
-    jobListings:       Infinity,
-    questionsPerSession: 20,
-  },
-} as const
-
-export function canAccess(tier: Tier, feature: keyof typeof TIER_LIMITS.pro): boolean {
-  const limit = TIER_LIMITS[tier][feature]
-  return limit === Infinity || limit > 0
-}
-
-export function isProOrElite(tier: Tier): boolean {
-  return tier === 'pro' || tier === 'elite'
-}
-
 // MOS branch lookup helper
 export const BRANCH_LABELS: Record<string, string> = {
   army:          'U.S. Army',

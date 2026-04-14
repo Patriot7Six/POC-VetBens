@@ -1,37 +1,13 @@
 -- ============================================================
--- Sprint 3: Profiles, Subscriptions, Onboarding
+-- Sprint 3: Subscriptions table + updated signup trigger
 -- ============================================================
+-- NOTE: The profiles table is created by 001_initial_schema.sql.
+-- This migration adds the subscriptions table and updates the
+-- signup trigger to also seed a free subscription row.
 
--- Extend auth.users with public profile data
-create table if not exists public.profiles (
-  id             uuid primary key references auth.users(id) on delete cascade,
-  email          text,
-  full_name      text,
-  avatar_url     text,
-  -- Military profile
-  branch         text check (branch in (
-    'Army','Navy','Air Force','Marine Corps',
-    'Coast Guard','Space Force','National Guard','Reserves'
-  )),
-  mos            text,          -- MOS / Rate / AFSC
-  rank           text,
-  ets_date       date,          -- End of Term of Service
-  -- Onboarding state
-  onboarding_complete boolean not null default false,
-  onboarding_step     int     not null default 0,
-  -- Stripe
-  stripe_customer_id  text unique,
-  -- Timestamps
-  created_at     timestamptz not null default now(),
-  updated_at     timestamptz not null default now()
-);
-
--- Subscription tiers
--- (PostgreSQL has no CREATE TYPE IF NOT EXISTS; guard with a DO block instead)
-do $$ begin
-  create type subscription_tier as enum ('free', 'pro', 'elite');
-exception when duplicate_object then null;
-end $$;
+-- ── Enums ─────────────────────────────────────────────────────
+-- subscription_tier already exists from 001_initial_schema.sql.
+-- subscription_status is new — guard against reruns.
 
 do $$ begin
   create type subscription_status as enum (
@@ -41,6 +17,7 @@ do $$ begin
 exception when duplicate_object then null;
 end $$;
 
+-- ── Subscriptions table ───────────────────────────────────────
 create table if not exists public.subscriptions (
   id                      uuid primary key default gen_random_uuid(),
   user_id                 uuid not null references auth.users(id) on delete cascade,
@@ -57,36 +34,23 @@ create table if not exists public.subscriptions (
   updated_at              timestamptz not null default now()
 );
 
--- One subscription per user index
-create unique index if not exists subscriptions_user_id_idx on public.subscriptions(user_id);
+-- One subscription per user
+create unique index if not exists subscriptions_user_id_idx
+  on public.subscriptions(user_id);
 
--- ── RLS ────────────────────────────────────────────────────
-alter table public.profiles      enable row level security;
+-- ── RLS for subscriptions ─────────────────────────────────────
 alter table public.subscriptions enable row level security;
 
--- Profiles: users can only read/write their own row
-create policy "profiles_select_own" on public.profiles
-  for select using (auth.uid() = id);
-
-create policy "profiles_insert_own" on public.profiles
-  for insert with check (auth.uid() = id);
-
-create policy "profiles_update_own" on public.profiles
-  for update using (auth.uid() = id);
-
--- Subscriptions: users can only read their own row
+-- Users can only read their own subscription
 create policy "subscriptions_select_own" on public.subscriptions
   for select using (auth.uid() = user_id);
 
--- Service role can do everything (needed for webhook handler)
+-- Service role can do everything (needed for Stripe webhook handler)
 create policy "subscriptions_service_all" on public.subscriptions
   using (auth.role() = 'service_role');
 
-create policy "profiles_service_all" on public.profiles
-  using (auth.role() = 'service_role');
-
--- ── Triggers ───────────────────────────────────────────────
--- Auto-create profile on signup
+-- ── Updated signup trigger ────────────────────────────────────
+-- Replaces the version from 001 to also seed a free subscription.
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer set search_path = public as $$
 begin
@@ -97,31 +61,14 @@ begin
     new.raw_user_meta_data ->> 'full_name',
     new.raw_user_meta_data ->> 'avatar_url'
   );
-  -- Also seed a free subscription record
+  -- Seed a free subscription record
   insert into public.subscriptions (user_id, tier, status)
   values (new.id, 'free', 'active');
   return new;
 end;
 $$;
 
-drop trigger if exists on_auth_user_created on auth.users;
-create trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute function public.handle_new_user();
-
--- Auto-update updated_at
-create or replace function public.set_updated_at()
-returns trigger language plpgsql as $$
-begin
-  new.updated_at = now();
-  return new;
-end;
-$$;
-
-create trigger profiles_updated_at
-  before update on public.profiles
-  for each row execute function public.set_updated_at();
-
-create trigger subscriptions_updated_at
-  before update on public.subscriptions
-  for each row execute function public.set_updated_at();
+-- ── Updated_at trigger for subscriptions ──────────────────────
+-- Reuses the handle_updated_at() function from 001_initial_schema.
+create trigger set_updated_at before update on public.subscriptions
+  for each row execute function public.handle_updated_at();
